@@ -26,7 +26,7 @@
 	  modules = [
 	    ./hardware-configuration.nix
 	    ./users/user.nix
-            ./configuration.nix
+      ./configuration.nix
 	    inputs.home-manager.nixosModules.default
 	  ];
 	};
