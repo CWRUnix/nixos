@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2317
+# This currently does not work due to disko-install trying to install GRUB 2 on ALL devices...
+exit 1
 
 # ensure this git repo is up to date
 git pull
