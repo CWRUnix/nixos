@@ -20,7 +20,7 @@
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/f650059f-d101-4999-9135-2625e30ad1a4";
     fsType = "btrfs";
-    options = ["subvol=root"];
+    options = ["subvol=root" "compress-force=zstd:3" "space_cache=v2" "discard=async"];
   };
 
   fileSystems."/.swapvol" = {
@@ -38,19 +38,19 @@
   fileSystems."/home" = {
     device = "/dev/disk/by-uuid/9b7f156b-764e-49d8-874d-7966497a6b22";
     fsType = "btrfs";
-    options = ["subvol=home"];
+    options = ["subvol=home" "compress-force=zstd:3" "space_cache=v2" "discard=async"];
   };
 
   fileSystems."/nix" = {
     device = "/dev/disk/by-uuid/f650059f-d101-4999-9135-2625e30ad1a4";
     fsType = "btrfs";
-    options = ["subvol=nix"];
+    options = ["subvol=nix" "compress-force=zstd:3" "space_cache=v2" "discard=async"];
   };
 
   fileSystems."/var/log" = {
     device = "/dev/disk/by-uuid/f650059f-d101-4999-9135-2625e30ad1a4";
     fsType = "btrfs";
-    options = ["subvol=log"];
+    options = ["subvol=log" "compress-force=zstd:3" "space_cache=v2" "discard=async"];
   };
 
   swapDevices = [];
