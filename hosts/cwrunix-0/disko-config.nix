@@ -1,14 +1,18 @@
-{
+{lib, ...}: {
   disko.devices = {
     disk = {
       main = {
         type = "disk";
-        device = "/dev/nvme0n1"; # 0n1, 500GB gen 4
+        device = lib.mkDefault "/dev/nvme0n1"; # 0n1, 500GB gen 4
         content = {
           type = "gpt";
           partitions = {
-            ESP = {
-              priority = 1;
+            boot = {
+              name = "boot";
+              size = "1M";
+              type = "EF02"; # BIOS boot partition
+            };
+            esp = {
               name = "ESP";
               size = "512M";
               type = "EF00";
@@ -70,7 +74,7 @@
       };
       home = {
         type = "disk";
-        device = "/dev/nvme1n1"; # 1n1, 1TB gen 4
+        device = lib.mkDefault "/dev/nvme1n1"; # 1n1, 1TB gen 4
         content = {
           type = "gpt";
           partitions = {

@@ -17,66 +17,6 @@
   boot.kernelModules = ["kvm-amd"];
   boot.extraModulePackages = [];
 
-  fileSystems."/" = {
-    device = "/dev/disk/by-uuid/fb64c7c9-690d-4c6b-ae4e-4d91a46a5e19";
-    fsType = "btrfs";
-    options = [
-      "subvol=@"
-      "compress=zstd:1"
-      "noatime"
-    ];
-  };
-
-  fileSystems."/.swapvol" = {
-    device = "/dev/disk/by-uuid/fb64c7c9-690d-4c6b-ae4e-4d91a46a5e19";
-    fsType = "btrfs";
-    options = [
-      "subvol=@swap"
-      "compress=zstd:1"
-      "noatime"
-    ];
-  };
-
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/4911-4B0D";
-    fsType = "vfat";
-    options = [
-      "fmask=0022"
-      "dmask=0022"
-      "defaults"
-    ];
-  };
-
-  fileSystems."/home" = {
-    device = "/dev/disk/by-uuid/b73206ff-5e69-456b-9fe8-c21f774faaa0";
-    fsType = "btrfs";
-    options = [
-      "subvol=@home"
-      "compress=zstd:1"
-      "noatime"
-    ];
-  };
-
-  fileSystems."/nix" = {
-    device = "/dev/disk/by-uuid/fb64c7c9-690d-4c6b-ae4e-4d91a46a5e19";
-    fsType = "btrfs";
-    options = [
-      "subvol=@nix"
-      "compress=zstd:1"
-      "noatime"
-    ];
-  };
-
-  fileSystems."/var/log" = {
-    device = "/dev/disk/by-uuid/fb64c7c9-690d-4c6b-ae4e-4d91a46a5e19";
-    fsType = "btrfs";
-    options = [
-      "subvol=@log"
-      "compress=zstd:1"
-      "noatime"
-    ];
-  };
-
   swapDevices = [];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
