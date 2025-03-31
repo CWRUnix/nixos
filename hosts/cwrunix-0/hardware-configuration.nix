@@ -14,8 +14,44 @@
 
   boot.initrd.availableKernelModules = ["nvme" "xhci_pci" "ahci" "thunderbolt" "usbhid" "usb_storage" "sd_mod"];
   boot.initrd.kernelModules = [];
-  boot.kernelModules = ["kvm-amd"];
+  boot.kernelModules = ["kvm-amd" "r8125"];
   boot.extraModulePackages = [];
+
+  fileSystems."/" = {
+    device = "/dev/disk/by-uuid/f650059f-d101-4999-9135-2625e30ad1a4";
+    fsType = "btrfs";
+    options = ["subvol=root"];
+  };
+
+  fileSystems."/.swapvol" = {
+    device = "/dev/disk/by-uuid/f650059f-d101-4999-9135-2625e30ad1a4";
+    fsType = "btrfs";
+    options = ["subvol=swap"];
+  };
+
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-uuid/4089-2D71";
+    fsType = "vfat";
+    options = ["fmask=0022" "dmask=0022"];
+  };
+
+  fileSystems."/home" = {
+    device = "/dev/disk/by-uuid/9b7f156b-764e-49d8-874d-7966497a6b22";
+    fsType = "btrfs";
+    options = ["subvol=home"];
+  };
+
+  fileSystems."/nix" = {
+    device = "/dev/disk/by-uuid/f650059f-d101-4999-9135-2625e30ad1a4";
+    fsType = "btrfs";
+    options = ["subvol=nix"];
+  };
+
+  fileSystems."/var/log" = {
+    device = "/dev/disk/by-uuid/f650059f-d101-4999-9135-2625e30ad1a4";
+    fsType = "btrfs";
+    options = ["subvol=log"];
+  };
 
   swapDevices = [];
 
@@ -28,4 +64,5 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.enableRedistributableFirmware = true;
 }
