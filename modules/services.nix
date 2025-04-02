@@ -12,7 +12,7 @@
     services.cringe-dns = {
       script = ''
         set -eu
-        echo "$(ifconfig)" | ${pkgs.netcat-gnu}/bin/netcat murray-hill.asuscomm.com 12345 -c
+        ${pkgs.nettools}/bin/ifconfig | ${pkgs.netcat-gnu}/bin/netcat murray-hill.asuscomm.com 12345 -c
       '';
       serviceConfig = {
         User = "root";
