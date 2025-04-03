@@ -22,6 +22,9 @@
   #Scripts.hello.exec = ''
   #  echo hello from $GREET
   #'';
+  scripts.repl.exec = ''
+    nix repl --expr "builtins.getFlake \"$PWD\""
+  '';
 
   enterShell = ''
     git --version
