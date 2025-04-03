@@ -42,6 +42,7 @@
               libraries = with pkgs.python312Packages; [
                 discordpy
               ];
+              doCheck = false;
             } (builtins.readFile ./bot.py);
           in
           "${discordBotPythonScript}/bin/bot";

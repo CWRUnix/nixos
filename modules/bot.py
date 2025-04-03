@@ -3,7 +3,7 @@ import os
 import subprocess
 
 TOKEN = os.environ['TOKEN']
-ifconfig_cmd = [ 'ifconfig' ]
+ifconfig_cmd = ['ifconfig']
 
 intents = discord.Intents.default()
 intents.message_content = True
