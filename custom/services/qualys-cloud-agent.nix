@@ -4,10 +4,12 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.services.qualys-cloud-agent;
-in {
-  imports = [];
+in
+{
+  imports = [ ];
 
   # Interface
   options = {
@@ -22,7 +24,7 @@ in {
       example = "qualys-cloud-agent";
     };
     extraPackages = lib.mkOption {
-      default = [];
+      default = [ ];
       type = lib.types.listOf lib.types.package;
       example = "[ pkgs.curl ]";
       description = "Extra packages to be included in the service.";
@@ -31,21 +33,20 @@ in {
   # Implementation
   config = lib.mkIf cfg.enable {
     environment = {
-      systemPackages = [cfg.package];
-      etc = {
-      }; # add conf files here
+      systemPackages = [ cfg.package ];
+      etc =
+        {
+        }; # add conf files here
     };
     systemd = {
-      packages = [cfg.package];
+      packages = [ cfg.package ];
       services.qualys-cloud-agent = {
-        after = ["network.target"];
-        wantedBy = ["multi-user.target"];
+        after = [ "network.target" ];
+        wantedBy = [ "multi-user.target" ];
         description = "Qualys Cloud Agent";
-        path =
-          [
-            cfg.package
-          ]
-          ++ cfg.extraPackages;
+        path = [
+          cfg.package
+        ] ++ cfg.extraPackages;
         #serviceConfig = {
         #  CapabilityBoundingSet = [
         #    #TODO make this based on the rpm's spec file

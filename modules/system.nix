@@ -3,7 +3,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   # Core stuff here.
   networking = {
     networkmanager = {
@@ -28,6 +29,9 @@
 
   nixpkgs.config.allowUnfree = true;
   nix = {
-    settings.experimental-features = ["nix-command" "flakes"];
+    settings.experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
   };
 }
