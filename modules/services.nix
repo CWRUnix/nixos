@@ -19,6 +19,16 @@
     #    Type = "oneshot";
     #  };
     #};
+    user.services = {
+      poweroff = {
+        description = "Poweroff Service";
+        startAt = [ "*-*-* 03:00:00" ];
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = "/run/current-system/sw/bin/poweroff";
+        };
+      };
+    };
     services.discord-bot = {
       description = "Discord bot client for the Linux Club Discord";
       wantedBy = [ "multi-user.target" ];
@@ -30,7 +40,7 @@
         User = "root"; # needs root to read /run/secrets/discord-bot.env
         Restart = "always";
         RestartSec = "5s";
-        EnvironmentFile = "/run/secrets/discord-bot.env"; # this file is read protected on the server. chmod 700 :)
+        EnvironmentFile = "/var/lib/discord/.env"; # this file is read protected on the server. chmod 700 :)
         ExecStart =
           let
             # Heres what everything does in C-family style function syntax:
