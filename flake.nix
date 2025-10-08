@@ -1,49 +1,79 @@
 {
-  description = "The Official NixOS flake for the Linux Club of Case Western Reserve University";
+  description = "CWRUnix club server";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    proxmox-nixos.url = "github:SaumonNet/proxmox-nixos";
+
     disko = {
-      # Declaratively manages our disk partitions
       url = "github:nix-community/disko/latest";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    impermanence = {
+      url = "github:nix-community/impermanence";
     };
   };
 
   outputs =
     {
-      nixpkgs,
-      nixpkgs-unstable,
-      disko,
+      self,
       ...
-    }:
-    {
-      nixosConfigurations =
-        let
-          modules = [
-            ./hosts # Holds the 'host' configurations; i.e. the configurations for each machine (HARDWARE BASED)
-            ./modules # Holds the 'module' configurations; i.e. the configurations for each service.
-            ./users # Holds the 'user' configurations; i.e. the configurations for each user.
-            disko.nixosModules.disko
-            {
-              nixpkgs.overlays = [
-                (_final: prev: {
-                  unstable = nixpkgs-unstable.legacyPackages.${prev.system};
-                })
-              ];
-            }
-          ];
-        in
-        {
-          cwrunix-0 = nixpkgs.lib.nixosSystem {
-            # Our flagship server, cwrunix-0.
-            specialArgs = {
-              hostname = "cwrunix-0";
-            };
-            system = "x86_64-linux";
-            inherit modules;
+    }@inputs:
+    inputs.flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        pkgs = import inputs.nixpkgs { inherit system; };
+      in
+      {
+        devShells = {
+          default = pkgs.mkShell {
+            SOPS_AGE_KEY_FILE = "key.txt";
+            packages = with pkgs; [
+              nil
+              nixd
+              sops
+              age
+              gnupg
+            ];
           };
         };
-    };
+        nixosConfigurations = rec {
+          default = server;
+          server = inputs.nixpkgs.lib.nixosSystem {
+            inherit system;
+            specialArgs = { inherit inputs system; };
+            modules = [
+              inputs.disko.nixosModules.disko
+              inputs.sops-nix.nixosModules.sops
+              inputs.impermanence.nixosModules.impermanence
+              ./nixos
+              inputs.proxmox-nixos.nixosModules.proxmox-ve
+            ];
+          };
+        };
+        formatter =
+          let
+            treefmtconfig = inputs.treefmt-nix.lib.evalModule pkgs {
+              projectRootFile = "flake.nix";
+              programs = {
+                nixfmt.enable = true;
+                prettier.enable = true;
+              };
+            };
+          in
+          treefmtconfig.config.build.wrapper;
+      }
+    );
 }

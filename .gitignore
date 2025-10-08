@@ -1,9 +1,4 @@
-# Devenv
-.devenv*
-devenv.local.nix
-
-# direnv
+key.txt
 .direnv
-
-# pre-commit
-.pre-commit-config.yaml
+result
+_decrypted.yaml
