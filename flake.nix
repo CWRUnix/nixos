@@ -36,7 +36,7 @@
       let
         pkgs = import inputs.nixpkgs { inherit system; };
       in
-      {
+      rec {
         devShells = {
           default = pkgs.mkShell {
             SOPS_AGE_KEY_FILE = "key.txt";
@@ -51,17 +51,36 @@
         };
         nixosConfigurations = rec {
           default = server;
-          server = inputs.nixpkgs.lib.nixosSystem {
+          server = 
+            let
+              devices = {
+                main = "/dev/disk/by-id/some-id";
+                storage = "/dev/disk/by-id/some-id";
+              };
+              host-name = "CWRUnix-0";
+              version = "25.05";
+            in inputs.nixpkgs.lib.nixosSystem {
             inherit system;
-            specialArgs = { inherit inputs system; };
+            specialArgs = { inherit inputs system devices host-name; };
             modules = [
               inputs.disko.nixosModules.disko
               inputs.sops-nix.nixosModules.sops
               inputs.impermanence.nixosModules.impermanence
-              ./nixos
               inputs.proxmox-nixos.nixosModules.proxmox-ve
+              ./nixos
             ];
           };
+          installer = inputs.nixpkgs.lib.nixosSystem {
+            inherit system;
+            specialArgs = { inherit inputs system; };
+            modules = [
+              ./installer
+            ];
+          };
+        };
+        packages = rec {
+          installer = nixosConfigurations.installer.config.system.build.isoImage;
+          default = installer;
         };
         formatter =
           let

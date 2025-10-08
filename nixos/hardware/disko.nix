@@ -1,9 +1,10 @@
+{ devices ? { main = ""; storage = ""; }}:
 {
   disko.devices = {
     disk = {
       main = {
         # When using disko-install, we will overwrite this value from the commandline
-        device = "/dev/disk/by-id/some-disk-id";
+        device = devices.main;
         type = "disk";
         content = {
           type = "gpt";
@@ -45,7 +46,7 @@
         };
       };
       large = {
-        device = "/dev/disk/by-id/some-disk-id";
+        device = devices.storage;
         type = "disk";
         content = {
           type = "gpt";

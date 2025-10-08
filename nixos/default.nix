@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, version, ... }:
 {
   imports = [
     ./boot.nix
@@ -30,4 +30,6 @@
     man-pages
     man-pages-posix
   ];
+
+  system.stateVersion = version;
 }

@@ -1,5 +1,7 @@
 { config, pkgs, host-name, ... }:
 {
+  networking.hostName = host-name;
+
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [
