@@ -29,66 +29,70 @@
       self,
       ...
     }@inputs:
-    inputs.flake-utils.lib.eachDefaultSystem (
-      system:
-      let
-        pkgs = import inputs.nixpkgs { inherit system; };
-      in
-      rec {
-        devShells = {
-          default = pkgs.mkShell {
-            SOPS_AGE_KEY_FILE = "SOPS_AGE_SSH_PRIVATE_KEY_FILE";
-            packages = with pkgs; [
-              nil
-              nixd
-              nixfmt
-              sops
-              age
-              gnupg
-            ];
-          };
-        };
-        nixosConfigurations = rec {
-          default = server;
-          server = inputs.nixpkgs.lib.nixosSystem {
-            inherit system;
-            specialArgs = {
-              inherit
-                inputs
-                system
-                ;
+    let
+      outputs = inputs.flake-utils.lib.eachDefaultSystem (
+        system:
+        let
+          pkgs = import inputs.nixpkgs { inherit system; };
+        in
+        rec {
+          devShells = {
+            default = pkgs.mkShell {
+              SOPS_AGE_KEY_FILE = "SOPS_AGE_SSH_PRIVATE_KEY_FILE";
+              packages = with pkgs; [
+                nil
+                nixd
+                nixfmt
+                sops
+                age
+                gnupg
+              ];
             };
-            modules = [
-              inputs.disko.nixosModules.disko
-              inputs.sops-nix.nixosModules.sops
-              inputs.impermanence.nixosModules.impermanence
-              inputs.proxmox-nixos.nixosModules.proxmox-ve
-              ./nixos
-            ];
           };
-          installer = inputs.nixpkgs.lib.nixosSystem {
-            inherit system;
-            specialArgs = { inherit inputs system; };
-            modules = [
-              ./installer
-            ];
-          };
-        };
-        packages = rec {
-          installer = nixosConfigurations.installer.config.system.build.isoImage;
-          default = installer;
-        };
-        formatter =
-          let
-            treefmtconfig = inputs.treefmt-nix.lib.evalModule pkgs {
-              projectRootFile = "flake.nix";
-              programs = {
-                nixfmt.enable = true;
-                prettier.enable = true;
+          nixosConfigurations = rec {
+            default = server;
+            server = inputs.nixpkgs.lib.nixosSystem {
+              inherit system;
+              specialArgs = {
+                inherit
+                  inputs
+                  system
+                  ;
               };
+              modules = [
+                inputs.disko.nixosModules.disko
+                inputs.sops-nix.nixosModules.sops
+                inputs.impermanence.nixosModules.impermanence
+                inputs.proxmox-nixos.nixosModules.proxmox-ve
+                ./nixos
+              ];
             };
-          in
-          treefmtconfig.config.build.wrapper;
-      }
-    );
+            installer = inputs.nixpkgs.lib.nixosSystem {
+              inherit system;
+              specialArgs = { inherit inputs system; };
+              modules = [
+                ./installer
+              ];
+            };
+          };
+          packages = rec {
+            installer = nixosConfigurations.installer.config.system.build.isoImage;
+            default = installer;
+          };
+          formatter =
+            let
+              treefmtconfig = inputs.treefmt-nix.lib.evalModule pkgs {
+                projectRootFile = "flake.nix";
+                programs = {
+                  nixfmt.enable = true;
+                  prettier.enable = true;
+                };
+              };
+            in
+            treefmtconfig.config.build.wrapper;
+        }
+      );
+    in
+    outputs // { nixosConfigurations = outputs.x86_64-linux.nixosConfigurations; };
+
 }
