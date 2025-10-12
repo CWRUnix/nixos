@@ -47,7 +47,7 @@
               };
             };
             swap = {
-              size = "128GB";
+              size = "128G";
               label = "NIXSWAP";
               uuid = "2138a498-29e9-4564-9604-0b0642e83905";
               _index = 3;
@@ -69,7 +69,7 @@
           };
         };
       };
-      large = {
+      storage = {
         device = config.consts.drives.storage.device;
         type = "disk";
         content = {
