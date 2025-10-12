@@ -93,6 +93,6 @@
         }
       );
     in
-    outputs // { nixosConfigurations = outputs.x86_64-linux.nixosConfigurations; };
+    outputs // { nixosConfigurations = outputs.nixosConfigurations.x86_64-linux; };
 
 }
