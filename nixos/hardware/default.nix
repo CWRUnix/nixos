@@ -1,4 +1,4 @@
-{ modulesPath, pkgs, ... }:
+{ modulesPath, pkgs, config, ... }:
 {
   imports = [
     ./disko.nix
@@ -21,21 +21,21 @@
         "usbhid"
         "rtsx_usb_sdmmc"
         "btrfs"
-        "usbip_host"
-        "sdhci_pci"
       ];
       kernelModules = [ "amdgpu" ];
     };
+
     kernelModules = [
-      "kvm-intel"
       "kvm-amd"
     ];
+
     extraModulePackages = with config.boot.kernelPackages; [
     ];
+
     supportedFilesystems = [
-      "ntfs"
       "btrfs"
     ];
+
     kernelPackages = pkgs.linuxPackages_latest;
   };
 

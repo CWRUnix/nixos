@@ -1,15 +1,33 @@
 {
-  devices ? {
-    main = "";
-    storage = "";
-  },
+  config,
+  lib,
 }:
 {
+  options.consts.drives = lib.mkOption {
+    type = lib.types.attrsOf (
+      lib.types.submodule {
+        options = {
+          device = lib.mkOption {
+            type = lib.types.str;
+            description = "Path to the drive (e.g., /dev/disk/by-id/...)";
+          };
+          mountpoint = lib.mkOption {
+            type = lib.types.str;
+            description = "Mountpoint for the drive";
+          };
+        };
+      }
+    );
+    description = ''
+      Paths to the drives to be used for installation. These should be stable paths, such as
+      /dev/disk/by-id/ata-... or /dev/disk/by-uuid/...
+    '';
+  };
+
   disko.devices = {
     disk = {
       main = {
-        # When using disko-install, we will overwrite this value from the commandline
-        device = devices.main;
+        device = config.consts.drives.main.device;
         type = "disk";
         content = {
           type = "gpt";
@@ -44,14 +62,14 @@
               content = {
                 type = "filesystem";
                 format = "btrfs";
-                mountpoint = "/nix";
+                mountpoint = "/nix"; # onto the tempfs defined in disks.nix
               };
             };
           };
         };
       };
       large = {
-        device = devices.storage;
+        device = config.consts.drives.storage.device;
         type = "disk";
         content = {
           type = "gpt";

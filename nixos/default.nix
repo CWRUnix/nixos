@@ -15,21 +15,34 @@
     ./userspace
   ];
 
-  documentation = {
-    enable = true;
-    man = {
-      enable = true;
-      generateCaches = true;
+  options = {
+    hostname = pkgs.lib.mkOption {
+      type = pkgs.lib.types.str;
+      description = "The hostname of the machine.";
     };
-    dev.enable = true;
+    version = pkgs.lib.mkOption {
+      type = pkgs.lib.types.str;
+      description = "The NixOS version to target.";
+    };
   };
 
-  environment.systemPackages = with pkgs; [
-    nano
-    neovim
-    man-pages
-    man-pages-posix
-  ];
+  config = {
+    documentation = {
+      enable = true;
+      man = {
+        enable = true;
+        generateCaches = true;
+      };
+      dev.enable = true;
+    };
 
-  system.stateVersion = version;
+    environment.systemPackages = with pkgs; [
+      nano
+      neovim
+      man-pages
+      man-pages-posix
+    ];
+
+    system.stateVersion = version;
+  };
 }
