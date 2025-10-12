@@ -10,9 +10,16 @@
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDwL6Uvhyr+mrXDPcM+d3AUD5l0eN2DoN+UqIHBWntB+ tev@ASUS"
       ];
       group = "tev";
-      extraGroups = [ "wheel" "libvirtd" "docker" "podman" "input" "kvm" ];
+      extraGroups = [
+        "wheel"
+        "libvirtd"
+        "docker"
+        "podman"
+        "input"
+        "kvm"
+      ];
       isNormalUser = true;
     };
   };
-  users.groups.tev = {};
+  users.groups.tev = { };
 }

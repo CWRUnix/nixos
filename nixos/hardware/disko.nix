@@ -1,4 +1,9 @@
-{ devices ? { main = ""; storage = ""; }}:
+{
+  devices ? {
+    main = "";
+    storage = "";
+  },
+}:
 {
   disko.devices = {
     disk = {
