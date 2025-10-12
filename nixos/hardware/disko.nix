@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  ...
 }:
 {
   options.consts.drives = lib.mkOption {
@@ -24,7 +25,7 @@
     '';
   };
 
-  disko.devices = {
+  config.disko.devices = {
     disk = {
       main = {
         device = config.consts.drives.main.device;

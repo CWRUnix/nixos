@@ -1,6 +1,8 @@
-{ pkgs, version, ... }:
+{ pkgs, config, ... }:
 {
   imports = [
+    ./consts.nix
+
     ./boot.nix
     ./cloudflare.nix
     ./localization.nix
@@ -16,13 +18,15 @@
   ];
 
   options = {
-    hostname = pkgs.lib.mkOption {
-      type = pkgs.lib.types.str;
-      description = "The hostname of the machine.";
-    };
-    version = pkgs.lib.mkOption {
-      type = pkgs.lib.types.str;
-      description = "The NixOS version to target.";
+    consts = {
+      hostname = pkgs.lib.mkOption {
+        type = pkgs.lib.types.str;
+        description = "The hostname of the machine.";
+      };
+      version = pkgs.lib.mkOption {
+        type = pkgs.lib.types.str;
+        description = "The NixOS version to target.";
+      };
     };
   };
 
@@ -43,6 +47,6 @@
       man-pages-posix
     ];
 
-    system.stateVersion = version;
+    system.stateVersion = config.consts.version;
   };
 }

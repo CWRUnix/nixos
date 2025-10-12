@@ -1,11 +1,9 @@
 {
   config,
-  pkgs,
-  host-name,
   ...
 }:
 {
-  networking.hostName = host-name;
+  networking.hostName = config.consts.hostname;
 
   networking.firewall = {
     enable = true;

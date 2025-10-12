@@ -12,6 +12,13 @@
                 Persisted stuff goes under config.consts.<name>.persisted-directories = [ ...list of directories ];
               '';
             };
+            persisted-files = lib.mkOption {
+              type = lib.types.listOf lib.types.str;
+              default = [ ];
+              description = ''
+                Persisted stuff goes under config.consts.<name>.persisted-files = [ ...list of files ];
+              '';
+            };
           };
         }
       );
@@ -28,6 +35,7 @@
         "${val.mountpoint}/persist" = {
           hideMounts = false;
           directories = val.persisted-directories;
+          files = val.persisted-files;
         };
       }
     ]) config.consts.drives;

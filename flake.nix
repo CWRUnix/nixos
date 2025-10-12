@@ -50,33 +50,22 @@
         };
         nixosConfigurations = rec {
           default = server;
-          server =
-            let
-              devices = {
-                main = "/dev/disk/by-id/some-id";
-                storage = "/dev/disk/by-id/some-id";
-              };
-              host-name = "CWRUnix-0";
-              version = "25.05";
-            in
-            inputs.nixpkgs.lib.nixosSystem {
-              inherit system;
-              specialArgs = {
-                inherit
-                  inputs
-                  system
-                  devices
-                  host-name
-                  ;
-              };
-              modules = [
-                inputs.disko.nixosModules.disko
-                inputs.sops-nix.nixosModules.sops
-                inputs.impermanence.nixosModules.impermanence
-                inputs.proxmox-nixos.nixosModules.proxmox-ve
-                ./nixos
-              ];
+          server = inputs.nixpkgs.lib.nixosSystem {
+            inherit system;
+            specialArgs = {
+              inherit
+                inputs
+                system
+                ;
             };
+            modules = [
+              inputs.disko.nixosModules.disko
+              inputs.sops-nix.nixosModules.sops
+              inputs.impermanence.nixosModules.impermanence
+              inputs.proxmox-nixos.nixosModules.proxmox-ve
+              ./nixos
+            ];
+          };
           installer = inputs.nixpkgs.lib.nixosSystem {
             inherit system;
             specialArgs = { inherit inputs system; };
